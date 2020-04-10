@@ -8,47 +8,142 @@ document.addEventListener("DOMContentLoaded", function () {
   // ======================== //
   // === GLOBAL VARIABLES === //
   // ======================== //
-  let stopwatchTotal = 1;
+  let stopwatchIndex = 0;
+  let totalNumberOfActiveWatches = 0;
+  const watches = [];
 
   // ========================== //
   // === OBJECT CONSTRUCTOR === //
   // ========================== //
+  function Stopwatch() {
+    this.index = stopwatchIndex; // this is the stopwatch objects location in the Array.
+    this.clockRunning = false;
+    this.time = 0;
+
+    this.reset = function () {
+      let timerHTML = document.getElementsByClassName(`timer_${this.index}`)[0];
+
+      timerHTML.innerHTML =
+        '<div class="minutes">00</div>:<div class="seconds">00</div>';
+      this.time = 0;
+    };
+
+    this.start = function () {
+      this.intervalId = setInterval(this.count, 1000);
+      this.clockRunning = !this.clockRunning;
+    };
+
+    this.stop = function () {
+      clearInterval(this.intervalId);
+      this.clockRunning = !this.clockRunning;
+    };
+
+    this.count = () => {
+      this.time++;
+      let cleanTimeHTML = this.timeConverter(this.time);
+      let timerHTML = document.getElementsByClassName(`timer_${this.index}`)[0];
+      timerHTML.innerHTML = cleanTimeHTML;
+    };
+
+    this.timeConverter = (t) => {
+      let minutes = Math.floor(t / 60);
+      let seconds = t - minutes * 60;
+
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+
+      if (minutes === 0) {
+        minutes = "00";
+      } else if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+
+      return `<div class="minutes">${minutes}</div>:<div class="seconds">${seconds}</div>`;
+    };
+  }
 
   // ================= //
   // === FUNCTIONS === //
   // ================= //
+
   function addField(el) {
-    stopwatchTotal++ 
+    if (totalNumberOfActiveWatches >= 10) {
+      return alert("Max number of timer reached.");
+    }
     // console.log(el); // log event to make sure the correct element was selected.
 
     // 1. Assign the value of the upload field location to a variable.
     const uploadField = document.getElementsByClassName("uploadfield");
 
     // 2. Build Close button and assign that to a variable
-    const closeButton = `<div name="close" class="close_button">&#215;</div>`;
+    const closeButton = `<div name="close" index="${stopwatchIndex}" class="close_button">&#215;</div>`;
 
     // 3.
-    const stopwatchTimer = `<div class="timer">00:00:00</div>`;
+    const stopwatchTimer = `<div name="timer" class="timer timer_${stopwatchIndex}"><div class="minutes">00</div>:<div class="seconds">00</div></div>`;
 
     // 4.
     const stopwatchButtons = `
     <div class="buttons">
-      <div name="start_stop" class="button">start</div>
-      <div name="stop" class="button">stop</div>
+      <div name="start_stop" index="${stopwatchIndex}" class="button start_stop_${stopwatchIndex}">start</div>
+      <div name="reset" index="${stopwatchIndex}" class="button">reset</div>
     </div>
     `;
+
+    // 5. Create new watch object to handle the rules for this stopwatch
+    const newWatch = new Stopwatch();
+
+    // 6. Collect it into the watches array.
+    watches.push(newWatch);
+    // console.log(watches);
 
     // 7. Upload a new stopwatch skeleton to the DOM using the uploadField's innerHTML as the destination.
     uploadField[0].innerHTML =
       uploadField[0].innerHTML +
-      `<div class="stopwatch">${closeButton}${stopwatchTimer}${stopwatchButtons}</div>`;
+      `<div index="${stopwatchIndex}" class="stopwatch">${closeButton}${stopwatchTimer}${stopwatchButtons}</div>`;
+
+    // 8.
+    totalNumberOfActiveWatches++;
+    stopwatchIndex++;
   }
 
   // This will hide elements after the close button is pressed.
   function closeButton(el) {
-    let parentElement = el.parentElement;
+    const parentElement = el.parentElement;
+    const indexNumber = el.attributes.index.value;
+    if (watches[indexNumber].clockRunning){
+      watches[indexNumber].stop();
+    };
     parentElement.classList.add("hide");
+    totalNumberOfActiveWatches--;
   }
+
+  function startStopButton(el) {
+    const elementIndex = +el.attributes.index.value;
+    const thisWatch = watches[elementIndex];
+    let startStopHTML = document.getElementsByClassName(
+      `start_stop_${elementIndex}`
+    )[0];
+
+    if (thisWatch.clockRunning) {
+      thisWatch.stop();
+      startStopHTML.innerHTML = "start";
+    } else {
+      thisWatch.start();
+      startStopHTML.innerHTML = "stop";
+    }
+  }
+
+  function resetButton(el) {
+    const elementIndex = +el.attributes.index.value;
+    const thisWatch = watches[elementIndex];
+    thisWatch.reset();
+  }
+
+  // =============== //
+  // === ON LOAD === //
+  // =============== //
+  addField();
 
   // ======================= //
   // === EVENT LISTENERS === //
@@ -58,14 +153,18 @@ document.addEventListener("DOMContentLoaded", function () {
       event.target.attributes.name !== null &&
       event.target.attributes.name !== undefined
     ) {
-      console.log(event.target.attributes.name.value);
-
       switch (event.target.attributes.name.value) {
         case "plus":
           addField(event.target);
           break;
         case "close":
           closeButton(event.target);
+          break;
+        case "start_stop":
+          startStopButton(event.target);
+          break;
+        case "reset":
+          resetButton(event.target);
           break;
         default:
           console.error(

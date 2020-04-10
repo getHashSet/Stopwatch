@@ -83,7 +83,8 @@ h1 span:last-child {
 }
 
 h2 {
-    font-size: .8em;
+    font-size: 1em;
+    color: #2980b9;
 }
 
 img {
@@ -202,6 +203,20 @@ nav {
     user-select: none;
 }
 
+.stopwatch .timer div {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+}
+
+.stopwatch .timer div:first-child {
+    text-align: end;
+}
+
+.stopwatch .timer div:last-child {
+    text-align: start;
+}
+
 .stopwatch .buttons {
     width: 100%;
     font-size: 2em;
@@ -212,9 +227,19 @@ nav {
     align-items: center;
 }
 
+.stopwatch .buttons div:first-child {
+    color: #2980b9;
+}
+
+.stopwatch .buttons div:last-child {
+    color: #c0392b;
+}
+
 .button {
     text-transform: uppercase;
     user-select: none;
+    width: 40%;
+    text-align: center;
 }
 
 .button:hover {
