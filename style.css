@@ -70,6 +70,16 @@ body {
 h1 {
     text-transform: uppercase;
     font-size: 2em;
+    letter-spacing: 4px;
+}
+
+h1 span:first-child {
+    margin-right: .2em;
+}
+
+h1 span:last-child {
+    border-bottom: 1px solid #2d3436;
+    display: inline-block;
 }
 
 h2 {
@@ -80,7 +90,9 @@ img {
     max-width: 2em;
 }
 
+/* ============== */
 /* --- header --- */
+/* ============== */
 header {
     position: fixed;
     top: 1em;
@@ -88,7 +100,9 @@ header {
     max-width: 80%;
 }
 
+/* =========== */
 /* --- nav --- */
+/* =========== */
 nav {
     position: fixed;
     top: 0;
@@ -96,17 +110,38 @@ nav {
     display: flex;
 }
 
+/* ================= */
 /* --- container --- */
+/* ================= */
 .container {
     min-height: calc(100vh - 64px); /* 64px is chosen to make sure the footer sticks to the bottom */
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.container .stopwatch_wrap {
+    width: 100%;
+    margin-top: 8em;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
-.plus_button {
+.container .stopwatch_wrap .stopwatch {
+    width: 512px;
+    height: 300px;
+    padding: .5em;
+    margin: .5em;
+    background: #fff;
+    border-radius: .2em;
+    border: 1px solid #2d3436;
+}
+
+.container .plus_button {
     width: 64px;
     height: 64px;
     display: flex;
@@ -115,21 +150,24 @@ nav {
     font-weight: 800;
     font-size: 3em;
     padding: .1em;
+    margin: .5em;
     border-radius: .2em;
     background: #fff;
     border: 1px solid #2d3436;
     user-select: none;
 }
 
-.plus_button:hover {
+.container .plus_button:hover {
     cursor: pointer;
 }
 
-.plus_button:active {
+.container .plus_button:active {
     transform: translateY(4px);
 }
 
+/* ============== */
 /* --- footer --- */
+/* ============== */
 footer {
     height: 64px;
     background-color: #555;
