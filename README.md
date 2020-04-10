@@ -19,6 +19,7 @@ Using only HTML, CSS and plain Javascript, create a Stopwatch application that m
 • Supports being insert on a page multiple times, i.e. 3 or more separate clocks should be able to run independently at once.
 
 • Make sure it is responsive. 
+
 ## Index 
  
 [How It Works](#How-It-Works) 

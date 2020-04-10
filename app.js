@@ -15,19 +15,23 @@ document.addEventListener("DOMContentLoaded", function () {
   // ========================== //
   // === OBJECT CONSTRUCTOR === //
   // ========================== //
+
+  // NOTE: The stopwatches will be made up of objects so that each one can handle thier own logic and variables.
   function Stopwatch() {
     this.index = stopwatchIndex; // this is the stopwatch objects location in the Array.
-    this.clockRunning = false;
-    this.time = 0;
+    this.clockRunning = false; // flag for start/stop.
+    this.time = 0; // timer starts at this number.
 
     this.reset = function () {
       let timerHTML = document.getElementsByClassName(`timer_${this.index}`)[0];
 
+      // NOTE: all innerHTML strings include HTML tags in them. This would not be a required step in React or jQuery. This is a vanilla javascript edge case.
       timerHTML.innerHTML =
         '<div class="minutes">00</div>:<div class="seconds">00</div>';
       this.time = 0;
     };
 
+    // NOTE: methods are used instead of prototypes to make reading the code easier.
     this.start = function () {
       this.intervalId = setInterval(this.count, 1000);
       this.clockRunning = !this.clockRunning;
@@ -38,6 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.clockRunning = !this.clockRunning;
     };
 
+    // NOTE: Arror function is required for methods to use the 'this' keyword. functions() default to window.
     this.count = () => {
       this.time++;
       let cleanTimeHTML = this.timeConverter(this.time);
@@ -46,19 +51,22 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     this.timeConverter = (t) => {
+      // NOTE: time rounded down and then devided by 60 result in the ammount of minutes to display.
       let minutes = Math.floor(t / 60);
-      let seconds = t - minutes * 60;
+      let seconds = t - minutes * 60; // NOTE: time - the total ammount of minuts multipled by 60 returns the seonds past.
 
       if (seconds < 10) {
         seconds = "0" + seconds;
       }
 
+      // NOTE: This is not strict and should not be used with typescript as this converts strings to numbers and back again using javascript defaults.
       if (minutes === 0) {
         minutes = "00";
       } else if (minutes < 10) {
         minutes = "0" + minutes;
       }
 
+      // NOTE: return the cleaned time to be placed into HTML
       return `<div class="minutes">${minutes}</div>:<div class="seconds">${seconds}</div>`;
     };
   }
@@ -67,6 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // === FUNCTIONS === //
   // ================= //
 
+  // NOTE: addField() gets passed an element to build a new object and inject it into the DOM. Injection point is hard coded.
   function addField(el) {
     if (totalNumberOfActiveWatches >= 10) {
       return alert("Max number of timer reached.");
@@ -79,10 +88,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // 2. Build Close button and assign that to a variable
     const closeButton = `<div name="close" index="${stopwatchIndex}" class="close_button">&#215;</div>`;
 
-    // 3.
+    // 3. Build the counter HTML
     const stopwatchTimer = `<div name="timer" class="timer timer_${stopwatchIndex}"><div class="minutes">00</div>:<div class="seconds">00</div></div>`;
 
-    // 4.
+    // 4. Build the Buttons HTML
     const stopwatchButtons = `
     <div class="buttons">
       <div name="start_stop" index="${stopwatchIndex}" class="button start_stop_${stopwatchIndex}">start</div>
@@ -102,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
       uploadField[0].innerHTML +
       `<div index="${stopwatchIndex}" class="stopwatch">${closeButton}${stopwatchTimer}${stopwatchButtons}</div>`;
 
-    // 8.
+    // 8. Increase both values keeping track of the total number of watches and active objects.
     totalNumberOfActiveWatches++;
     stopwatchIndex++;
   }
@@ -125,6 +134,7 @@ document.addEventListener("DOMContentLoaded", function () {
       `start_stop_${elementIndex}`
     )[0];
 
+    // NOTE: Change HTML to identify if the button will be running the start or the stop functions.
     if (thisWatch.clockRunning) {
       thisWatch.stop();
       startStopHTML.innerHTML = "start";
@@ -134,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // NOTE: Take the element and find the watch's index. Then reset that object.
   function resetButton(el) {
     const elementIndex = +el.attributes.index.value;
     const thisWatch = watches[elementIndex];
@@ -143,16 +154,20 @@ document.addEventListener("DOMContentLoaded", function () {
   // =============== //
   // === ON LOAD === //
   // =============== //
+  // NOTE: On load will fire a single field to be constructed without needing to press the plus button.
   addField();
 
   // ======================= //
   // === EVENT LISTENERS === //
   // ======================= //
   document.addEventListener("click", function (event) {
+    // NOTE: identify if the clicked item has been assined a name. Elements without names can be ignored.
     if (
       event.target.attributes.name !== null &&
       event.target.attributes.name !== undefined
     ) {
+      // NOTE: Switch statment is to identify what functions should be exicuted based on the name of the object selected.
+      // NOTE: See functions section.
       switch (event.target.attributes.name.value) {
         case "plus":
           addField(event.target);
