@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("GitHub: https://github.com/getHashSet");
   console.log("Resume: https://prop7.herokuapp.com/matthew");
 
+  // ======================== //
+  // === GLOBAL VARIABLES === //
+  // ======================== //
+  let stopwatchTotal = 1;
+
   // ========================== //
   // === OBJECT CONSTRUCTOR === //
   // ========================== //
@@ -13,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // === FUNCTIONS === //
   // ================= //
   function addField(el) {
+    stopwatchTotal++ 
     // console.log(el); // log event to make sure the correct element was selected.
 
     // 1. Assign the value of the upload field location to a variable.
