@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.clockRunning = !this.clockRunning;
     };
 
-    // NOTE: Arror function is required for methods to use the 'this' keyword. functions() default to window.
+    // NOTE: Arrow function is required for methods to use the 'this' keyword. functions() default to window.
     this.count = () => {
       this.time++;
       let cleanTimeHTML = this.timeConverter(this.time);
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     this.timeConverter = (t) => {
       // NOTE: time rounded down and then devided by 60 result in the ammount of minutes to display.
       let minutes = Math.floor(t / 60);
-      let seconds = t - minutes * 60; // NOTE: time - the total ammount of minuts multipled by 60 returns the seonds past.
+      let seconds = t - minutes * 60; // NOTE: time - the total ammount of minuts multipled by 60 returns the remaining seconds.
 
       if (seconds < 10) {
         seconds = "0" + seconds;
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // NOTE: addField() gets passed an element to build a new object and inject it into the DOM. Injection point is hard coded.
   function addField(el) {
     if (totalNumberOfActiveWatches >= 10) {
-      return alert("Max number of timer reached.");
+      return alert("Max number of Stopwatches reached.");
     }
     // console.log(el); // log event to make sure the correct element was selected.
 
