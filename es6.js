@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("GitHub: https://github.com/getHashSet");
     console.log("Resume: https://prop7.herokuapp.com/matthew");
   
+    // ========================= //
+    // === GLOBAL VARIABLES  === //
+    // ========================= //
+    const codeJoke = ["hip", "Hip" ];
+
     // ======================== //
     // === SCOPED VARIABLES === //
     // ======================== //
