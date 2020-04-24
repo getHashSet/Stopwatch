@@ -46,14 +46,16 @@ document.addEventListener("DOMContentLoaded", function () {
   
       // NOTE: methods are used instead of prototypes to make reading the code easier.
       this.start = function () {
+        console.log(this.timePassed);
+        console.log(this.time);
         this.intervalId = setInterval(this.count, 10);
         this.startTime = Date.now(); // Set a flag for when the timer was started.
         this.clockRunning = !this.clockRunning;
       };
   
       this.stop = function () {
-        clearInterval(this.intervalId);
         this.timePassed = this.time * 10; // when the stop button is clicked. Collect how much time had passed and store it within the object. // multiply it by the setInterval()
+        clearInterval(this.intervalId);
         this.clockRunning = !this.clockRunning;
       };
   
@@ -67,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
       this.timeConverter = (t) => {
         t = Date.now() - this.startTime; // Override the t set by the collected time in the object.
-        t = t + this.timePassed; // devide that by the total number of time used in the setInterval function.
+        t = t + this.timePassed; // 
         // NOTE: time rounded down and then devided by 60 result in the ammount of minutes to display.
         let milliseconds = Math.floor((t % (1000 * 60)) * 1);
         let seconds = Math.floor((t % (1000 * 60)) / 1000);
