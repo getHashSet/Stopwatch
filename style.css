@@ -222,7 +222,7 @@ nav {
     font-weight: 200;
     height: 35%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
 }
 
