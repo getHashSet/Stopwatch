@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     this.stop = function () {
-      this.timePassed = this.time * 10; // when the stop button is clicked. Collect how much time had passed and store it within the object. // multiply it by the setInterval()
+      this.timePassed = this.timePassed + Date.now() - this.startTime; 
       clearInterval(this.intervalId);
       this.clockRunning = !this.clockRunning;
     };
