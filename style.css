@@ -169,6 +169,10 @@ nav {
     background: #fff;
     border-radius: .2em;
     border: 1px solid #2d3436;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .stopwatch .close_button {
@@ -193,9 +197,10 @@ nav {
 }
 
 .stopwatch .timer {
-    width: 100%;
+    width: 80%;
     height: 65%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     font-size: 5em;
@@ -203,18 +208,12 @@ nav {
     user-select: none;
 }
 
-.stopwatch .timer div {
-    width: 50%;
-    margin: 0;
-    padding: 0;
-}
-
 .stopwatch .timer div:first-child {
     text-align: end;
 }
 
 .stopwatch .timer div:last-child {
-    text-align: start;
+    text-align: left;
 }
 
 .stopwatch .buttons {
@@ -233,6 +232,13 @@ nav {
 
 .stopwatch .buttons div:last-child {
     color: #c0392b;
+}
+
+.milliseconds,
+.seconds,
+.minutes {
+    min-width: 1.5em;
+    text-align: center;
 }
 
 .button {
