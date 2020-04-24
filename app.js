@@ -6,11 +6,17 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("Resume: https://prop7.herokuapp.com/matthew");
 
   // ======================== //
-  // === GLOBAL VARIABLES === //
+  // === SCOPED VARIABLES === //
   // ======================== //
-  let stopwatchIndex = 0;
-  let totalNumberOfActiveWatches = 0;
-  const watches = [];
+  // let stopwatchIndex = 0;
+  // let totalNumberOfActiveWatches = 0;
+  // const watches = [];
+
+  const componentVariables = {
+    stopwatchIndex: 0,
+    totalNumberOfActiveWatches: 0,
+    watches: []
+  };
 
   // ========================== //
   // === OBJECT CONSTRUCTOR === //
@@ -18,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // NOTE: The stopwatches will be made up of objects so that each one can handle thier own logic and variables.
   function Stopwatch() {
-    this.index = stopwatchIndex; // this is the stopwatch objects location in the Array.
+    this.index = componentVariables.stopwatchIndex; // this is the stopwatch objects location in the Array.
     this.clockRunning = false; // flag for start/stop.
     this.time = 0; // timer starts at this number.
 
@@ -77,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // NOTE: addField() gets passed an element to build a new object and inject it into the DOM. Injection point is hard coded.
   function addField(el) {
-    if (totalNumberOfActiveWatches >= 10) {
+    if (componentVariables.totalNumberOfActiveWatches >= 10) {
       return alert("Max number of Stopwatches reached.");
     }
     // console.log(el); // log event to make sure the correct element was selected.
@@ -86,16 +92,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const uploadField = document.getElementsByClassName("uploadfield");
 
     // 2. Build Close button and assign that to a variable
-    const closeButton = `<div name="close" index="${stopwatchIndex}" class="close_button">&#215;</div>`;
+    const closeButton = `<div name="close" index="${componentVariables.stopwatchIndex}" class="close_button">&#215;</div>`;
 
     // 3. Build the counter HTML
-    const stopwatchTimer = `<div name="timer" class="timer timer_${stopwatchIndex}"><div class="minutes">00</div>:<div class="seconds">00</div></div>`;
+    const stopwatchTimer = `<div name="timer" class="timer timer_${componentVariables.stopwatchIndex}"><div class="minutes">00</div>:<div class="seconds">00</div></div>`;
 
     // 4. Build the Buttons HTML
     const stopwatchButtons = `
     <div class="buttons">
-      <div name="start_stop" index="${stopwatchIndex}" class="button start_stop_${stopwatchIndex}">start</div>
-      <div name="reset" index="${stopwatchIndex}" class="button">reset</div>
+      <div name="start_stop" index="${componentVariables.stopwatchIndex}" class="button start_stop_${componentVariables.stopwatchIndex}">start</div>
+      <div name="reset" index="${componentVariables.stopwatchIndex}" class="button">reset</div>
     </div>
     `;
 
@@ -103,17 +109,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const newWatch = new Stopwatch();
 
     // 6. Collect it into the watches array.
-    watches.push(newWatch);
+    componentVariables.watches.push(newWatch);
     // console.log(watches);
 
     // 7. Upload a new stopwatch skeleton to the DOM using the uploadField's innerHTML as the destination.
     uploadField[0].innerHTML =
       uploadField[0].innerHTML +
-      `<div index="${stopwatchIndex}" class="stopwatch">${closeButton}${stopwatchTimer}${stopwatchButtons}</div>`;
+      `<div index="${componentVariables.stopwatchIndex}" class="stopwatch">${closeButton}${stopwatchTimer}${stopwatchButtons}</div>`;
 
     // 8. Increase both values keeping track of the total number of watches and active objects.
-    totalNumberOfActiveWatches++;
-    stopwatchIndex++;
+    componentVariables.totalNumberOfActiveWatches++;
+    componentVariables.stopwatchIndex++;
   }
 
   // This will hide elements after the close button is pressed.
@@ -121,15 +127,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const parentElement = el.parentElement;
     const indexNumber = el.attributes.index.value;
     if (watches[indexNumber].clockRunning){
-      watches[indexNumber].stop();
+      componentVariables.watches[indexNumber].stop();
     };
     parentElement.classList.add("hide");
-    totalNumberOfActiveWatches--;
+    componentVariables.totalNumberOfActiveWatches--;
   }
 
   function startStopButton(el) {
     const elementIndex = +el.attributes.index.value;
-    const thisWatch = watches[elementIndex];
+    const thisWatch = componentVariables.watches[elementIndex];
     let startStopHTML = document.getElementsByClassName(
       `start_stop_${elementIndex}`
     )[0];
