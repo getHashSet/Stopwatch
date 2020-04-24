@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const componentVariables = {
     stopwatchIndex: 0,
     totalNumberOfActiveWatches: 0,
-    watches: []
+    watches: [],
   };
 
   // ========================== //
@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
     this.index = componentVariables.stopwatchIndex; // this is the stopwatch objects location in the Array.
     this.clockRunning = false; // flag for start/stop.
     this.time = 0; // timer starts at this number.
+    this.timePassed = 0;
 
     this.reset = function () {
       let timerHTML = document.getElementsByClassName(`timer_${this.index}`)[0];
@@ -40,11 +41,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // NOTE: methods are used instead of prototypes to make reading the code easier.
     this.start = function () {
       this.intervalId = setInterval(this.count, 1000);
+      this.startTime = Date.now(); // Set a flag for when the timer was started.
       this.clockRunning = !this.clockRunning;
     };
 
     this.stop = function () {
       clearInterval(this.intervalId);
+      this.timePassed = this.time; // when the stop button is clicked. Collect how much time had passed and store it within the object.
       this.clockRunning = !this.clockRunning;
     };
 
@@ -57,6 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     this.timeConverter = (t) => {
+      t = Date.now() - this.startTime; // Override the t set by the collected time in the object.
+      t = Math.floor(t / 1000) + this.timePassed; // devide that by the total number of time used in the setInterval function.
       // NOTE: time rounded down and then devided by 60 result in the ammount of minutes to display.
       let minutes = Math.floor(t / 60);
       let seconds = t - minutes * 60; // NOTE: time - the total ammount of minuts multipled by 60 returns the remaining seconds.
@@ -126,9 +131,9 @@ document.addEventListener("DOMContentLoaded", function () {
   function closeButton(el) {
     const parentElement = el.parentElement;
     const indexNumber = el.attributes.index.value;
-    if (watches[indexNumber].clockRunning){
+    if (componentVariables.watches[indexNumber].clockRunning) {
       componentVariables.watches[indexNumber].stop();
-    };
+    }
     parentElement.classList.add("hide");
     componentVariables.totalNumberOfActiveWatches--;
   }
@@ -153,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // NOTE: Take the element and find the watch's index. Then reset that object.
   function resetButton(el) {
     const elementIndex = +el.attributes.index.value;
-    const thisWatch = watches[elementIndex];
+    const thisWatch = componentVariables.watches[elementIndex];
     thisWatch.reset();
   }
 
