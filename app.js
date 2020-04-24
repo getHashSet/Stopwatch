@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // NOTE: all innerHTML strings include HTML tags in them. This would not be a required step in React or jQuery. This is a vanilla javascript edge case.
       timerHTML.innerHTML =
-        '<div class="minutes">00</div>:<div class="seconds">00</div>:<div class="milliseconds">00</div>';
+        '<div class="minutes">00</div>:<div class="seconds">00</div>:<div class="milliseconds">000</div>';
       this.time = 0;
       this.timePassed = 0;
     };
@@ -62,14 +62,21 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     this.timeConverter = (t) => {
-      t = Date.now() - this.startTime; // Override the t set by the collected time in the object.
-      t = Math.floor(t / 10) + this.timePassed; // devide that by the total number of time used in the setInterval function.
-      // NOTE: time rounded down and then devided by 60 result in the ammount of minutes to display.
-      let seconds = Math.floor(t / 60);
-      let milliseconds = t - seconds * 60; // NOTE: time - the total ammount of minuts multipled by 60 returns the remaining seconds.
-      let minutes = Math.floor(seconds / 60);
 
-      if (milliseconds < 10) {
+      t = Date.now() - this.startTime; // Override the t set by the collected time in the object.
+      t += this.timePassed; // devide that by the total number of time used in the setInterval function.
+      // NOTE: time rounded down and then devided by 60 result in the ammount of minutes to display.
+      let milliseconds = Math.floor((t % (1000 * 60)) * 1);
+      let seconds = Math.floor((t % (1000 * 60)) / 1000);
+      let minutes = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+
+      milliseconds = milliseconds - (seconds * 1000);
+
+      if (milliseconds === 0) {
+        milliseconds = "000";
+      } else if (milliseconds < 10) {
+        milliseconds = "00" + milliseconds;
+      } else if (milliseconds < 100) {
         milliseconds = "0" + milliseconds;
       }
 
@@ -109,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeButton = `<div name="close" index="${componentVariables.stopwatchIndex}" class="close_button">&#215;</div>`;
 
     // 3. Build the counter HTML
-    const stopwatchTimer = `<div name="timer" class="timer timer_${componentVariables.stopwatchIndex}"><div class="minutes">00</div>:<div class="seconds">00</div>:<div class="milliseconds">00</div>`;
+    const stopwatchTimer = `<div name="timer" class="timer timer_${componentVariables.stopwatchIndex}"><div class="minutes">00</div>:<div class="seconds">00</div>:<div class="milliseconds">000</div>`;
 
     // 4. Build the Buttons HTML
     const stopwatchButtons = `
@@ -151,11 +158,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let elementIndex;
 
     // Check to see if reset button was passing an index value or if an element was clicked.
-    if(typeof(el) === "number"){
+    if (typeof el === "number") {
       elementIndex = el;
     } else {
       elementIndex = +el.attributes.index.value;
-    };
+    }
 
     const thisWatch = componentVariables.watches[elementIndex];
     let startStopHTML = document.getElementsByClassName(
@@ -166,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (thisWatch.clockRunning) {
       thisWatch.stop();
       startStopHTML.innerHTML = "start";
-    } else if (!thisWatch.clockRunning && typeof(el) !== 'number') {
+    } else if (!thisWatch.clockRunning && typeof el !== "number") {
       thisWatch.start();
       startStopHTML.innerHTML = "stop";
     }
